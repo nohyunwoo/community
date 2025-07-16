@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ComeOn - 커뮤니티</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>커뮤니티</title>
     <style>
         * {
             margin: 0;
@@ -14,122 +12,342 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            height: 100vh;
-            background: linear-gradient(120deg, #fbc2eb 0%, #a6c1ee 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            color: #333;
         }
 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        /* Header */
         header {
-            width: 100%;
-            padding: 20px 40px;
-            background: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 0;
+        }
+
+        nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            position: fixed;
-            top: 0;
-            z-index: 100;
+            padding: 2rem 0;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: #2B6CB0;
-        }
-
-        nav a {
-            margin-left: 20px;
-            color: #333;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
             text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
+            letter-spacing: 1px;
         }
 
-        nav a:hover {
-            color: #2B6CB0;
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
         }
 
-        .content {
-            margin-top: 120px;
-            width: 90%;
-            max-width: 900px;
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+            font-size: 1.1rem;
+            padding: 0.5rem 0;
         }
 
-        h1 {
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: #2D3748;
+        .nav-links a:hover {
+            opacity: 0.8;
         }
 
-        .post {
-            background-color: rgba(255,255,255,0.9);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
-            transition: transform 0.2s ease;
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
         }
 
-        .post:hover {
-            transform: translateY(-4px);
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
         }
 
-        .post h3 {
-            margin-bottom: 10px;
-            color: #2B6CB0;
+        .btn-primary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .post p {
-            color: #4A5568;
+        .btn-primary:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+
+        .hero {
+            text-align: center;
+            color: white;
+            max-width: 600px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 300;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.3s forwards;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.6s forwards;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.9s forwards;
+        }
+
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 30px;
+        }
+
+        /* Recent Posts Section */
+        .recent-posts {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .recent-posts h2 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 300;
+        }
+
+        .post-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .post-item:last-child {
+            border-bottom: none;
+        }
+
+        .post-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .post-title {
+            color: white;
+            font-size: 1rem;
+            flex: 1;
+        }
+
+        .post-meta {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Footer */
         footer {
-            margin-top: 40px;
-            color: #718096;
-            font-size: 14px;
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: auto;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .post-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
         }
     </style>
 </head>
 <body>
-
     <header>
-        <div class="logo">ComeOn</div>
-        <nav>
-            <a href="#">홈</a>
-            <a href="#">글쓰기</a>
-            <a href="#">내 프로필</a>
-            <a href="/logout">로그아웃</a>
+        <nav class="container">
+            <a href="#" class="logo">ComeOn</a>
+            <ul class="nav-links">
+                <li><a href="#home">홈</a></li>
+                <li><a href="#board">게시판</a></li>
+                <li><a href="#about">소개</a></li>
+                <li><a href="#contact">문의</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-primary">로그인</a>
+                <a href="#" class="btn btn-secondary">회원가입</a>
+            </div>
         </nav>
     </header>
 
-    <main class="content">
-        <h1>커뮤니티 게시글</h1>
+    <main>
+        <div class="container">
+            <section class="hero">
+                <h1>함께 소통하는 공간</h1>
+                <p>다양한 이야기를 나누고 새로운 인연을 만들어보세요</p>
+                <div class="cta-buttons">
+                    <a href="#" class="btn btn-secondary btn-large">게시글 작성하기</a>
+                    <a href="#" class="btn btn-primary btn-large">게시판 보기</a>
+                </div>
+            </section>
 
-        <div class="post">
-            <h3>📌 첫 번째 게시글 제목</h3>
-            <p>게시글 내용이 여기에 요약되어 보여집니다. 클릭하면 상세페이지로 이동합니다.</p>
+            <section class="recent-posts">
+                <h2>최근 게시글</h2>
+                <div class="post-item">
+                    <div class="post-title">안녕하세요! 새로운 멤버입니다</div>
+                    <div class="post-meta">
+                        <span>김철수</span>
+                        <span>2분 전</span>
+                    </div>
+                </div>
+                <div class="post-item">
+                    <div class="post-title">오늘 날씨가 정말 좋네요</div>
+                    <div class="post-meta">
+                        <span>이영희</span>
+                        <span>15분 전</span>
+                    </div>
+                </div>
+                <div class="post-item">
+                    <div class="post-title">맛있는 카페 추천해주세요</div>
+                    <div class="post-meta">
+                        <span>박민수</span>
+                        <span>1시간 전</span>
+                    </div>
+                </div>
+                <div class="post-item">
+                    <div class="post-title">주말 모임 참여하실 분 있나요?</div>
+                    <div class="post-meta">
+                        <span>최지은</span>
+                        <span>3시간 전</span>
+                    </div>
+                </div>
+            </section>
         </div>
-
-        <div class="post">
-            <h3>💡 두 번째 게시글 제목</h3>
-            <p>여기는 커뮤니티입니다. 자유롭게 질문하고 정보를 공유해보세요!</p>
-        </div>
-
-        <div class="post">
-            <h3>🔥 핫한 게시글 제목</h3>
-            <p>많은 사람들이 보고 있는 인기글입니다.</p>
-        </div>
-
-        <footer>
-            &copy; 2025 ComeOn Community
-        </footer>
     </main>
 
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 ComeOn. 모든 권리 보유.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 게시글 클릭 이벤트
+        document.querySelectorAll('.post-item').forEach(item => {
+            item.addEventListener('click', function() {
+                alert('게시글로 이동합니다: ' + this.querySelector('.post-title').textContent);
+            });
+        });
+
+        // 네비게이션 스크롤 효과
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.background = 'rgba(255, 255, 255, 0.15)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.1)';
+            }
+        });
+
+        // 부드러운 스크롤
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
