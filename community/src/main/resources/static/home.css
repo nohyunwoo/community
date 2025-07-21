@@ -194,6 +194,11 @@
             flex: 1;
         }
 
+        .post-title a {
+            color: white;
+            text-decoration: none; /* 밑줄 제거 */
+        }
+
         .post-meta {
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.9rem;

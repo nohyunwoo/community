@@ -22,7 +22,7 @@
         </div>
       </div>
 
-      <form class="write-form" id="writeForm">
+      <form action="/post" method="post" class="write-form" id="writeForm">
         <div class="form-group required">
           <label for="category">카테고리</label>
           <select id="category" class="form-control category-select" required>
@@ -38,7 +38,7 @@
 
         <div class="form-group required">
           <label for="title">제목</label>
-          <input type="text" id="title" class="form-control" placeholder="제목을 입력하세요" required maxlength="100">
+          <input name="title" type="text" id="title" class="form-control" placeholder="제목을 입력하세요" required maxlength="100">
           <div class="char-counter" id="titleCounter">0 / 100</div>
         </div>
 
@@ -55,7 +55,7 @@
               <label for="isNotice">공지사항</label>
             </div>
           </div>
-          <textarea id="content" class="form-control" placeholder="내용을 입력하세요...
+          <textarea name="content" id="content" class="form-control" placeholder="내용을 입력하세요...
 
 다음과 같은 내용을 포함하여 작성해보세요:
 • 여러분의 경험이나 생각
@@ -241,45 +241,6 @@
         }
     }
 
-    // 폼 제출
-    document.getElementById('writeForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const category = document.getElementById('category').value;
-        const title = document.getElementById('title').value;
-        const content = document.getElementById('content').value;
-
-        if (!category) {
-            alert('카테고리를 선택해주세요.');
-            return;
-        }
-
-        if (!title.trim()) {
-            alert('제목을 입력해주세요.');
-            return;
-        }
-
-        if (!content.trim()) {
-            alert('내용을 입력해주세요.');
-            return;
-        }
-
-        // 실제로는 서버로 데이터 전송
-        const formData = new FormData();
-        formData.append('category', category);
-        formData.append('title', title);
-        formData.append('content', content);
-        formData.append('tags', document.getElementById('tags').value);
-        formData.append('allowComments', document.getElementById('allowComments').checked);
-        formData.append('isNotice', document.getElementById('isNotice').checked);
-
-        uploadedFiles.forEach(file => {
-            formData.append('files', file);
-        });
-
-        alert('게시글이 성공적으로 등록되었습니다!');
-        // window.location.href = '/board'; // 게시판으로 이동
-    });
 
     // 네비게이션 스크롤 효과
     window.addEventListener('scroll', function() {
@@ -291,16 +252,6 @@
         }
     });
 
-    // 페이지 떠나기 전 확인
-    window.addEventListener('beforeunload', function(e) {
-        const title = document.getElementById('title').value;
-        const content = document.getElementById('content').value;
-
-        if (title.trim() || content.trim()) {
-            e.preventDefault();
-            e.returnValue = '';
-        }
-    });
   </script>
 </body>
 </html>

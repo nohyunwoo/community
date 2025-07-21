@@ -43,23 +43,5 @@ public class UserController {
         return "redirect:/login";
     }
 
-    @GetMapping("/home")
-    public String home(Model model, Authentication authentication){
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
-            CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
-            model.addAttribute("displayName", user.getDisplayName());
-        }
-        return "home";
-    }
 
-    @GetMapping("/board")
-    public String board(){
-
-        return "board";
-    }
-    @GetMapping("/post")
-    public String post(){
-
-        return "post";
-    }
 }
