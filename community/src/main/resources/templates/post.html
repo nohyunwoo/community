@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>새 글 작성 - ComeOn</title>
+  <link rel="stylesheet" href="/post.css">
+</head>
+
+<body>
+  <div th:replace="nav :: navbar"></div>
+
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <div class="page-title">
+          <h1>새 글 작성</h1>
+          <p>자유롭게 여러분의 이야기를 들려주세요</p>
+        </div>
+        <div class="breadcrumb">
+          <a href="#home">홈</a> > <a href="#board">게시판</a> > 새 글 작성
+        </div>
+      </div>
+
+      <form class="write-form" id="writeForm">
+        <div class="form-group required">
+          <label for="category">카테고리</label>
+          <select id="category" class="form-control category-select" required>
+            <option value="">카테고리를 선택하세요</option>
+            <option value="free">자유게시판</option>
+            <option value="qna">질문답변</option>
+            <option value="info">정보공유</option>
+            <option value="review">후기</option>
+            <option value="hobby">취미</option>
+            <option value="study">스터디</option>
+          </select>
+        </div>
+
+        <div class="form-group required">
+          <label for="title">제목</label>
+          <input type="text" id="title" class="form-control" placeholder="제목을 입력하세요" required maxlength="100">
+          <div class="char-counter" id="titleCounter">0 / 100</div>
+        </div>
+
+        <div class="form-group required">
+          <label for="content">내용</label>
+          <div class="writing-options">
+            <button type="button" class="btn btn-primary btn-sm" onclick="togglePreview()">미리보기</button>
+            <div class="option-toggle">
+              <input type="checkbox" id="allowComments" checked>
+              <label for="allowComments">댓글 허용</label>
+            </div>
+            <div class="option-toggle">
+              <input type="checkbox" id="isNotice">
+              <label for="isNotice">공지사항</label>
+            </div>
+          </div>
+          <textarea id="content" class="form-control" placeholder="내용을 입력하세요...
+
+다음과 같은 내용을 포함하여 작성해보세요:
+• 여러분의 경험이나 생각
+• 유용한 정보나 팁
+• 질문이나 도움 요청
+• 취미나 관심사 공유
+
+서로 존중하며 건전한 소통을 위해 노력해주세요." required></textarea>
+          <div class="preview-mode" id="previewMode">
+            <div class="preview-title" id="previewTitle">제목을 입력하세요</div>
+            <div id="previewContent">내용을 입력하세요</div>
+          </div>
+          <div class="char-counter" id="contentCounter">0 / 10000</div>
+        </div>
+
+        <div class="form-group">
+          <label>첨부파일</label>
+          <div class="file-upload">
+            <input type="file" id="fileInput" class="file-upload-input" multiple accept="image/*,.pdf,.doc,.docx,.txt">
+            <label for="fileInput" class="file-upload-label">
+              📁 파일 선택 (최대 5개, 10MB 이하)
+            </label>
+          </div>
+          <div class="file-list" id="fileList"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="tags">태그</label>
+          <input type="text" id="tags" class="form-control" placeholder="태그를 입력하세요 (쉼표로 구분)">
+          <small style="color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-top: 0.5rem; display: block;">
+            예: 맛집, 카페, 강남역, 추천
+          </small>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" onclick="saveDraft()">임시저장</button>
+          <button type="button" class="btn btn-outline" onclick="goBack()">취소</button>
+          <button type="submit" class="btn btn-success">게시글 등록</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 ComeOn. 모든 권리 보유.</p>
+    </div>
+  </footer>
+
+  <script>
+    let uploadedFiles = [];
+    let isPreviewMode = false;
+
+    // 문자 수 카운터
+    function updateCharCounter(input, counter, maxLength) {
+        const current = input.value.length;
+        const counterEl = document.getElementById(counter);
+        counterEl.textContent = `${current} / ${maxLength}`;
+
+        if (current > maxLength * 0.9) {
+            counterEl.className = 'char-counter danger';
+        } else if (current > maxLength * 0.7) {
+            counterEl.className = 'char-counter warning';
+        } else {
+            counterEl.className = 'char-counter';
+        }
+    }
+
+    // 제목 카운터
+    document.getElementById('title').addEventListener('input', function() {
+        updateCharCounter(this, 'titleCounter', 100);
+        updatePreview();
+    });
+
+    // 내용 카운터
+    document.getElementById('content').addEventListener('input', function() {
+        updateCharCounter(this, 'contentCounter', 10000);
+        updatePreview();
+    });
+
+    // 파일 업로드 처리
+    document.getElementById('fileInput').addEventListener('change', function() {
+        const files = Array.from(this.files);
+
+        for (let file of files) {
+            if (uploadedFiles.length >= 5) {
+                alert('최대 5개의 파일만 업로드할 수 있습니다.');
+                break;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                alert(`${file.name}은 10MB를 초과합니다.`);
+                continue;
+            }
+
+            uploadedFiles.push(file);
+        }
+
+        updateFileList();
+        this.value = '';
+    });
+
+    // 파일 목록 업데이트
+    function updateFileList() {
+        const fileList = document.getElementById('fileList');
+        fileList.innerHTML = '';
+
+        uploadedFiles.forEach((file, index) => {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.innerHTML = `
+                <span>📎 ${file.name} (${formatFileSize(file.size)})</span>
+                <button type="button" class="file-remove" onclick="removeFile(${index})">×</button>
+            `;
+            fileList.appendChild(fileItem);
+        });
+    }
+
+    // 파일 제거
+    function removeFile(index) {
+        uploadedFiles.splice(index, 1);
+        updateFileList();
+    }
+
+    // 파일 크기 포맷
+    function formatFileSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    // 미리보기 토글
+    function togglePreview() {
+        const content = document.getElementById('content');
+        const preview = document.getElementById('previewMode');
+        const button = event.target;
+
+        isPreviewMode = !isPreviewMode;
+
+        if (isPreviewMode) {
+            content.style.display = 'none';
+            preview.style.display = 'block';
+            button.textContent = '편집모드';
+            updatePreview();
+        } else {
+            content.style.display = 'block';
+            preview.style.display = 'none';
+            button.textContent = '미리보기';
+        }
+    }
+
+    // 미리보기 업데이트
+    function updatePreview() {
+        if (!isPreviewMode) return;
+
+        const title = document.getElementById('title').value || '제목을 입력하세요';
+        const content = document.getElementById('content').value || '내용을 입력하세요';
+
+        document.getElementById('previewTitle').textContent = title;
+        document.getElementById('previewContent').innerHTML = content.replace(/\n/g, '<br>');
+    }
+
+    // 임시저장
+    function saveDraft() {
+        const formData = {
+            category: document.getElementById('category').value,
+            title: document.getElementById('title').value,
+            content: document.getElementById('content').value,
+            tags: document.getElementById('tags').value,
+            allowComments: document.getElementById('allowComments').checked,
+            isNotice: document.getElementById('isNotice').checked,
+            timestamp: new Date().toISOString()
+        };
+
+        // 실제로는 서버에 저장하거나 localStorage 사용
+        alert('임시저장되었습니다.');
+    }
+
+    // 취소
+    function goBack() {
+        if (confirm('작성 중인 내용이 있습니다. 정말 나가시겠습니까?')) {
+            history.back();
+        }
+    }
+
+    // 폼 제출
+    document.getElementById('writeForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const category = document.getElementById('category').value;
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+
+        if (!category) {
+            alert('카테고리를 선택해주세요.');
+            return;
+        }
+
+        if (!title.trim()) {
+            alert('제목을 입력해주세요.');
+            return;
+        }
+
+        if (!content.trim()) {
+            alert('내용을 입력해주세요.');
+            return;
+        }
+
+        // 실제로는 서버로 데이터 전송
+        const formData = new FormData();
+        formData.append('category', category);
+        formData.append('title', title);
+        formData.append('content', content);
+        formData.append('tags', document.getElementById('tags').value);
+        formData.append('allowComments', document.getElementById('allowComments').checked);
+        formData.append('isNotice', document.getElementById('isNotice').checked);
+
+        uploadedFiles.forEach(file => {
+            formData.append('files', file);
+        });
+
+        alert('게시글이 성공적으로 등록되었습니다!');
+        // window.location.href = '/board'; // 게시판으로 이동
+    });
+
+    // 네비게이션 스크롤 효과
+    window.addEventListener('scroll', function() {
+        const header = document.querySelector('header');
+        if (window.scrollY > 50) {
+            header.style.background = 'rgba(255, 255, 255, 0.15)';
+        } else {
+            header.style.background = 'rgba(255, 255, 255, 0.1)';
+        }
+    });
+
+    // 페이지 떠나기 전 확인
+    window.addEventListener('beforeunload', function(e) {
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+
+        if (title.trim() || content.trim()) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+  </script>
+</body>
+</html>

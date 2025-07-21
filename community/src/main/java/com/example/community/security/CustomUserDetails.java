@@ -10,7 +10,18 @@ public class CustomUserDetails extends User {
     public Long id;
 
     public CustomUserDetails(String username, String password,
-                             Collection<? extends GrantedAuthority> authorities) {
+                             Collection<? extends GrantedAuthority> authorities,
+                             String displayName, Long id) {
         super(username, password, authorities);
+        this.displayName = displayName;
+        this.id = id;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

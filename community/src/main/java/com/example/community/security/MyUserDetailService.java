@@ -30,9 +30,8 @@ public class MyUserDetailService implements UserDetailsService {
         ArrayList<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("일반유저"));
 
-        CustomUserDetails customUserDetails = new CustomUserDetails(user.getUsername(), user.getPassword(), authorities);
-        customUserDetails.displayName = user.getDisplayName();
-        customUserDetails.id = user.getId();
+        CustomUserDetails customUserDetails = new CustomUserDetails(
+                user.getUsername(), user.getPassword(), authorities, user.getDisplayName(), user.getId());
 
         return customUserDetails;
     }

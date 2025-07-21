@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 - ComeOn</title>
+    <link rel="stylesheet" href="/board.css">
+</head>
+<body>
+    <div th:replace="nav :: navbar"></div>
+
+    <main>
+        <div class="container">
+            <div class="board-header">
+                <div class="board-title">
+                    <h1>자유게시판</h1>
+                    <p>자유롭게 이야기를 나눠보세요</p>
+                </div>
+                <a href="/post" class="btn write-btn">새 글 작성</a>
+            </div>
+
+            <div class="search-filter">
+                <div class="search-box">
+                    <input type="text" placeholder="게시글 제목이나 내용을 검색하세요...">
+                    <button type="submit">검색</button>
+                </div>
+                <select class="filter-select">
+                    <option>전체</option>
+                    <option>제목</option>
+                    <option>내용</option>
+                    <option>작성자</option>
+                </select>
+                <select class="filter-select">
+                    <option>최신순</option>
+                    <option>조회순</option>
+                    <option>댓글순</option>
+                </select>
+            </div>
+
+            <div class="post-list">
+                <div class="post-list-header">
+                    <div>제목</div>
+                    <div>작성자</div>
+                    <div>작성일</div>
+                    <div>조회수</div>
+                </div>
+
+                <div class="post-item">
+                    <div class="post-title">
+                        안녕하세요! 새로 가입한 멤버입니다 🙋‍♀️
+                        <span class="new">NEW</span>
+                    </div>
+                    <div class="post-author">김철수</div>
+                    <div class="post-date">5분 전</div>
+                    <div class="post-views">👁 15</div>
+                </div>
+
+                <div class="post-item">
+                    <div class="post-title">오늘 날씨가 정말 좋네요! 산책하기 딱 좋은 날</div>
+                    <div class="post-author">이영희</div>
+                    <div class="post-date">23분 전</div>
+                    <div class="post-views">👁 42</div>
+                </div>
+
+                <div class="post-item">
+                    <div class="post-title">맛있는 카페 추천해주세요 ☕ (강남 근처)</div>
+                    <div class="post-author">박민수</div>
+                    <div class="post-date">1시간 전</div>
+                    <div class="post-views">👁 67</div>
+                </div>
+
+                <div class="post-item">
+                    <div class="post-title">주말 모임 참여하실 분 있나요? 함께 영화 보러가요!</div>
+                    <div class="post-author">최지은</div>
+                    <div class="post-date">3시간 전</div>
+                    <div class="post-views">👁 89</div>
+                </div>
+
+                <div class="post-item">
+                    <div class="post-title">코딩 공부하시는 분들 모여서 스터디 어떠세요?</div>
+                    <div class="post-author">정수민</div>
+                    <div class="post-date">5시간 전</div>
+                    <div class="post-views">👁 124</div>
+                </div>
+
+                <div class="post-item">
+                    <div class="post-title">요리 레시피 공유합니다 🍳 간단한 파스타 만들기</div>
+                    <div class="post-author">홍길동</div>
+                    <div class="post-date">1일 전</div>
+                    <div class="post-views">👁 156</div>
+                </div>
+
+                <div class="post-item">
+                    <div class="post-title">이번 주말에 등산 같이 가실 분 계신가요?</div>
+                    <div class="post-author">한지민</div>
+                    <div class="post-date">1일 전</div>
+                    <div class="post-views">👁 203</div>
+                </div>
+
+                <div class="post-item">
+                    <div class="post-title">독서모임 멤버 모집합니다 📚 함께 책을 읽어요</div>
+                    <div class="post-author">송하늘</div>
+                    <div class="post-date">2일 전</div>
+                    <div class="post-views">👁 245</div>
+                </div>
+
+                <div class="post-item">
+                    <div class="post-title">운동 같이 하실 분 있나요? 헬스장 PT 나눠서 받아요</div>
+                    <div class="post-author">강태양</div>
+                    <div class="post-date">2일 전</div>
+                    <div class="post-views">👁 187</div>
+                </div>
+
+                <div class="post-item">
+                    <div class="post-title">반려동물 자랑하기 🐕🐈 우리 아이들을 소개합니다</div>
+                    <div class="post-author">나사랑</div>
+                    <div class="post-date">3일 전</div>
+                    <div class="post-views">👁 312</div>
+                </div>
+            </div>
+
+            <div class="pagination">
+                <button class="page-btn">‹</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">4</button>
+                <button class="page-btn">5</button>
+                <button class="page-btn">›</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 ComeOn. 모든 권리 보유.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 게시글 클릭 이벤트
+        document.querySelectorAll('.post-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const title = this.querySelector('.post-title').textContent.trim();
+                alert('게시글로 이동합니다: ' + title);
+            });
+        });
+
+        // 검색 기능
+        document.querySelector('.search-box button').addEventListener('click', function() {
+            const searchTerm = document.querySelector('.search-box input').value;
+            if (searchTerm) {
+                alert('검색어: ' + searchTerm);
+            }
+        });
+
+        document.querySelector('.search-box input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const searchTerm = this.value;
+                if (searchTerm) {
+                    alert('검색어: ' + searchTerm);
+                }
+            }
+        });
+
+        // 페이지네이션
+        document.querySelectorAll('.page-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+                if (!isNaN(this.textContent)) {
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // 네비게이션 스크롤 효과
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.background = 'rgba(255, 255, 255, 0.15)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.1)';
+            }
+        });
+    </script>
+</body>
+</html>
