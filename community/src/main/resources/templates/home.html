@@ -27,6 +27,7 @@
                     </div>
                     <div class="post-meta">
                         <span th:text="${post.user.displayName}">작성자</span>
+                        <span th:text="${@timeAgo.format(post.createdAt)}">작성일</span>
                         <span th:text="'👁 ' + ${post.count}">조회수</span>
                     </div>
                 </div>
@@ -41,12 +42,6 @@
     </footer>
 
     <script>
-        // 게시글 클릭 이벤트
-        document.querySelectorAll('.post-item').forEach(item => {
-            item.addEventListener('click', function() {
-                alert('게시글로 이동합니다: ' + this.querySelector('.post-title').textContent);
-            });
-        });
 
         // 네비게이션 스크롤 효과
         window.addEventListener('scroll', function() {

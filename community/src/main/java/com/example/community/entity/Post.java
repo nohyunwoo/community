@@ -35,4 +35,8 @@ public class Post {
     protected void onCreate(){
         this.createdAt = LocalDateTime.now();
     }
+
+    public void increaseCount(){
+        this.count++;
+    }
 }

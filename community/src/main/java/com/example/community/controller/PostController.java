@@ -12,10 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,7 +35,6 @@ public class PostController {
     }
     @GetMapping("/post")
     public String post(){
-
         return "post";
     }
 
@@ -41,7 +42,14 @@ public class PostController {
     public String savePost(@ModelAttribute PostRequestDTO postRequestDTO,
                            Principal principal){
         postService.savePost(postRequestDTO, principal.getName());
-
         return "redirect:/board";
     }
+
+    @GetMapping("/post/{id}")
+    public String viewPost(@PathVariable Long id, Model model) {
+        Post post = postService.findByIdAndIncreaseCount(id); // 조회 + 증가
+        model.addAttribute("post", post);
+        return "postView";
+    }
+
 }

@@ -49,7 +49,7 @@
                         <a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}">게시글 제목</a>
                     </div>
                     <div class="post-author" th:text="${post.user.displayName}">작성자</div>
-                    <div class="post-date" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</div>
+                    <div class="post-date" th:text="${@timeAgo.format(post.createdAt)}">작성일</div>
                     <div class="post-views" th:text="'👁 ' + ${post.count}">조회수</div>
                 </div>
 
@@ -74,13 +74,6 @@
     </footer>
 
     <script>
-        // 게시글 클릭 이벤트
-        document.querySelectorAll('.post-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const title = this.querySelector('.post-title').textContent.trim();
-                alert('게시글로 이동합니다: ' + title);
-            });
-        });
 
         // 검색 기능
         document.querySelector('.search-box button').addEventListener('click', function() {
