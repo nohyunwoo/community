@@ -1,10 +1,13 @@
 package com.example.community.controller;
 
 import com.example.community.dto.PostRequestDTO;
+import com.example.community.entity.Comment;
 import com.example.community.entity.Post;
 import com.example.community.entity.User;
+import com.example.community.repository.CommentRepository;
 import com.example.community.repository.PostRepository;
 import com.example.community.repository.UserRepository;
+import com.example.community.service.CommentService;
 import com.example.community.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -26,6 +29,8 @@ public class PostController {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final PostService postService;
+    private final CommentRepository commentRepository;
+    private final CommentService commentService;
 
     @GetMapping("/board")
     public String board(Model model){
@@ -48,7 +53,11 @@ public class PostController {
     @GetMapping("/post/{id}")
     public String viewPost(@PathVariable Long id, Model model) {
         Post post = postService.findByIdAndIncreaseCount(id); // 조회 + 증가
+        List<Comment> commentByPostId = commentService.getCommentByPostId(id);
+
+
         model.addAttribute("post", post);
+        model.addAttribute("comments", commentByPostId);
         return "postView";
     }
 
