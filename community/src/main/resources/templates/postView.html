@@ -11,7 +11,7 @@
 
     <main>
         <div class="container">
-            <a href="#" class="btn back-btn">
+            <a href="/board" class="btn back-btn">
                 ← 목록으로 돌아가기
             </a>
 
@@ -23,11 +23,13 @@
                         <span>📅 <span th:text="${@timeAgo.format(post.createdAt)}">작성 시간</span></span>
                         <span>👁 <span th:text="${post.count}">조회수</span></span>
                     </div>
+                    <input type="hidden" name="postId" th:value="${post.id}" />
                     <div class="post-actions">
-                        <button class="action-btn">👍 좋아요 (12)</button>
+                        <button class="action-btn like-btn" th:attr="data-post-id=${post.id}">👍 좋아요</button>
                         <button class="action-btn">📱 공유</button>
                         <button class="action-btn">⚠️ 신고</button>
                     </div>
+
                 </div>
 
                 <div class="post-content">
@@ -35,7 +37,7 @@
                 </div>
 
                 <div class="post-stats">
-                    <span>좋아요 12개</span>
+                    <span id="like-count">좋아요[[${likeCount}]]개</span>
                     <span>댓글 8개</span>
                     <span th:text="${'조회수 '+ post.count + '회'}">조회수</span>
                 </div>
@@ -88,3 +90,26 @@
             <p>&copy; 2025 ComeOn. 모든 권리 보유.</p>
         </div>
     </footer>
+
+    <script>
+        document.querySelector('.like-btn').addEventListener('click', function () {
+            const postId = this.getAttribute('data-post-id');
+
+            fetch('/post/like', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `postId=${postId}`
+            })
+            .then(response => response.text())
+            .then(likeCount => {
+                // '좋아요 12개' 형식으로 텍스트 업데이트
+                document.getElementById('like-count').textContent = `좋아요 ${likeCount}개`;
+            })
+            .catch(err => {
+                console.error('에러 발생:', err);
+            });
+        });
+
+    </script>
