@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -25,13 +26,19 @@ public class Post_like {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private Long likeCount =0L;
+    private Long likeCount =1L;
 
     private LocalDateTime createdAt;
+
+    public Post_like() {
+
+    }
 
     public void increaseLike(){
         this.likeCount++;
     }
+
+
 
     public Post_like(Post post, User user) {
         this.post = post;

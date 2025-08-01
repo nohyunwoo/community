@@ -72,8 +72,16 @@ public class PostController {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("유저 없음"));
 
-        Post_like postLike = new Post_like(post, user);
-        postLike.increaseLike();
-        postLikeRepository.save(postLike);
-    }
+        Optional<Post_like> optionalPostLike = postLikeRepository.findByPost(post);
+
+        if(optionalPostLike.isPresent()){
+            Post_like postLike= optionalPostLike.get();
+            postLike.increaseLike();
+            postLikeRepository.save(postLike);
+        } else {
+                Post_like postLike = new Post_like(post, user);
+                postLikeRepository.save(postLike);
+            }
+
+        }
 }
