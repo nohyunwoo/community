@@ -1,5 +1,6 @@
 package com.example.community.controller;
 
+import com.example.community.dto.LikeRequestDTO;
 import com.example.community.dto.PostRequestDTO;
 import com.example.community.entity.Comment;
 import com.example.community.entity.Post;
@@ -11,8 +12,11 @@ import com.example.community.repository.PostRepository;
 import com.example.community.repository.UserRepository;
 import com.example.community.security.CustomUserDetails;
 import com.example.community.service.CommentService;
+import com.example.community.service.LikeService;
 import com.example.community.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +37,7 @@ public class PostController {
     private final CommentRepository commentRepository;
     private final CommentService commentService;
     private final PostLikeRepository postLikeRepository;
+    private final LikeService likeService;
 
     @GetMapping("/board")
     public String board(Model model){
@@ -56,32 +61,26 @@ public class PostController {
     public String viewPost(@PathVariable Long id, Model model) {
         Post post = postService.findByIdAndIncreaseCount(id); // 조회 + 증가
         List<Comment> commentByPostId = commentService.getCommentByPostId(id);
-
+        Long likeCount = likeService.getLikeCount(id);
         model.addAttribute("post", post);
         model.addAttribute("comments", commentByPostId);
+        model.addAttribute("likeCount", likeCount);
         return "postView";
     }
 
     @PostMapping("/post/like")
-    @ResponseBody
-    public void increaseLike(@RequestParam Long postId,
-                             @AuthenticationPrincipal CustomUserDetails customUserDetails){
-
-        Long userId = customUserDetails.getId();
-        Post post = postService.findById(postId);
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("유저 없음"));
-
-        Optional<Post_like> optionalPostLike = postLikeRepository.findByPost(post);
-
-        if(optionalPostLike.isPresent()){
-            Post_like postLike= optionalPostLike.get();
-            postLike.increaseLike();
-            postLikeRepository.save(postLike);
-        } else {
-                Post_like postLike = new Post_like(post, user);
-                postLikeRepository.save(postLike);
-            }
-
+    public ResponseEntity<Void> like(@RequestParam Long postId,
+                                     @AuthenticationPrincipal CustomUserDetails userDetails){
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
+        likeService.likePost(postId, userDetails.getId());
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/like/count")
+    public ResponseEntity<Long> count(@RequestParam Long postId) {
+        return ResponseEntity.ok(likeService.getLikeCount(postId));
+    }
 }

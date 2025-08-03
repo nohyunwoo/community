@@ -1,8 +1,15 @@
 package com.example.community.config;
 
 
+import com.example.community.security.MyUserDetailService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.parameters.P;
@@ -15,7 +22,10 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 @Configuration
 // 설정을 활성화
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final MyUserDetailService myUserDetailService;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -23,10 +33,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CsrfTokenRepository csrfTokenRepository() {
-        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-        repository.setHeaderName("X-XSRF-TOKEN");
-        return repository;
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(myUserDetailService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        return new ProviderManager(authenticationProvider());
     }
 
     @Bean
@@ -38,14 +54,14 @@ public class SecurityConfig {
                 authorize.requestMatchers("/**").permitAll()
         );
 
-        http.formLogin((formLogin) ->
-                        formLogin
-                                .loginPage("/login")
-                                .defaultSuccessUrl("/home", true)
-                                .failureUrl("/login?error=true")
+        http.authenticationProvider(authenticationProvider());
 
+        http.formLogin((formLogin) ->
+                formLogin
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/home", true)
+                        .failureUrl("/login?error=true")
         );
         return http.build();
     }
-
 }
