@@ -286,7 +286,12 @@
             display: flex;
             justify-content: center;
             gap: 0.5rem;
-            margin-top: 2rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;   /* 아래 여백 확보 */
+            /* 구분선 */
+            padding-top: 0.75rem;    /* 선과 버튼 사이 간격 */
+            border-top: 1px solid rgba(255, 255, 255, 0.2);  /* 반투명 흰색 라인 */
+            width: 100%;
         }
 
         .page-btn {

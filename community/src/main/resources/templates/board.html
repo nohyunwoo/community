@@ -44,25 +44,46 @@
                     <div>작성일</div>
                     <div>조회수</div>
                 </div>
-                <div th:each="post : ${postList}" class="post-item">
-                    <div class="post-title">
-                        <a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}">게시글 제목</a>
+                <div th:if="${posts.totalElements > 0}">
+                    <div th:each="post : ${posts.content}" class="post-item">
+                        <div class="post-title">
+                            <a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}">게시글 제목</a>
+                        </div>
+                        <div class="post-author" th:text="${post.user.displayName}">작성자</div>
+                        <div class="post-date" th:text="${@timeAgo.format(post.createdAt)}">작성일</div>
+                        <div class="post-views" th:text="'👁 ' + ${post.count}">조회수</div>
                     </div>
-                    <div class="post-author" th:text="${post.user.displayName}">작성자</div>
-                    <div class="post-date" th:text="${@timeAgo.format(post.createdAt)}">작성일</div>
-                    <div class="post-views" th:text="'👁 ' + ${post.count}">조회수</div>
                 </div>
+                <p th:if="${posts.totalElements == 0}">게시글이 없습니다.</p>
 
-            </div>
+                <div class="pagination" th:if="${posts.totalPages > 1}">
+                    <!-- 이전 버튼 -->
+                    <button class="page-btn"
+                            th:if="${!posts.first}"
+                            th:onclick="'location.href=\'/board?page=' + (${posts.number} - 1) + '&size=' + ${posts.size} + '\''">
+                        ‹
+                    </button>
 
-            <div class="pagination">
-                <button class="page-btn">‹</button>
-                <button class="page-btn active">1</button>
-                <button class="page-btn">2</button>
-                <button class="page-btn">3</button>
-                <button class="page-btn">4</button>
-                <button class="page-btn">5</button>
-                <button class="page-btn">›</button>
+                    <!-- 페이지 번호 버튼 -->
+                    <span th:each="i : ${#numbers.sequence(0, posts.totalPages-1)}">
+                        <button class="page-btn"
+                                th:if="${i != posts.number}"
+                                th:onclick="'location.href=\'/board?page=' + ${i} + '&size=' + ${posts.size} + '\''"
+                                th:text="${i + 1}">
+                        </button>
+                        <button class="page-btn active"
+                                th:if="${i == posts.number}"
+                                th:text="${i + 1}">
+                        </button>
+                    </span>
+
+                    <!-- 다음 버튼 -->
+                    <button class="page-btn"
+                            th:if="${!posts.last}"
+                            th:onclick="'location.href=\'/board?page=' + (${posts.number} + 1) + '&size=' + ${posts.size} + '\''">
+                        ›
+                    </button>
+                </div>
             </div>
         </div>
     </main>

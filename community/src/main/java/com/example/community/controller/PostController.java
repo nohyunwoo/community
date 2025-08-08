@@ -15,6 +15,9 @@ import com.example.community.service.CommentService;
 import com.example.community.service.LikeService;
 import com.example.community.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -40,9 +43,13 @@ public class PostController {
     private final LikeService likeService;
 
     @GetMapping("/board")
-    public String board(Model model){
-        List<Post> postList = postRepository.findAll();
-        model.addAttribute("postList", postList);
+    public String board(@RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "10") int size,
+                        Model model){
+        Page<Post> posts = postRepository.findAll(
+                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"))
+        );
+        model.addAttribute("posts", posts);
         return "board";
     }
     @GetMapping("/post")
