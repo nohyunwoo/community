@@ -17,6 +17,7 @@ import com.example.community.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,9 +47,10 @@ public class PostController {
     public String board(@RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "10") int size,
                         Model model){
-        Page<Post> posts = postRepository.findAll(
-                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"))
-        );
+        Pageable pageable = PageRequest.of
+                (page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Post> posts = postRepository.findAllWithUser(pageable);
+
         model.addAttribute("posts", posts);
         return "board";
     }

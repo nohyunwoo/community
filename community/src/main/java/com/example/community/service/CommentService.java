@@ -43,7 +43,7 @@ public class CommentService {
 
     @Transactional
     public List<Comment> getCommentByPostId(Long id){
-        List<Comment> comments = commentRepository.findByPostId(id);
+        List<Comment> comments = commentRepository.findAllWithUserByPostId(id);
         return comments;
     }
 }

@@ -33,19 +33,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(myUserDetailService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager() {
-        return new ProviderManager(authenticationProvider());
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
         http.csrf(csrf -> csrf.disable());
@@ -54,7 +41,6 @@ public class SecurityConfig {
                 authorize.requestMatchers("/**").permitAll()
         );
 
-        http.authenticationProvider(authenticationProvider());
 
         http.formLogin((formLogin) ->
                 formLogin
