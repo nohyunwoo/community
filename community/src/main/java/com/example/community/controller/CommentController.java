@@ -29,7 +29,6 @@ public class CommentController {
                           , Principal principal){
         Long postId = commentRequestDTO.getPostId();
         commentService.saveComment(commentRequestDTO, principal.getName(), postId);
-
         return "redirect:/post/" + postId;
     }
 

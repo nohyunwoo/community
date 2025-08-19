@@ -46,4 +46,9 @@ public class CommentService {
         List<Comment> comments = commentRepository.findAllWithUserByPostId(id);
         return comments;
     }
+
+    public long getCount(Long id){
+        long count = commentRepository.countByPostId(id);
+        return count;
+    }
 }

@@ -20,10 +20,12 @@
             </div>
 
             <div class="search-filter">
-                <div class="search-box">
-                    <input type="text" placeholder="게시글 제목이나 내용을 검색하세요...">
-                    <button type="submit">검색</button>
-                </div>
+                <form>
+                    <div class="search-box">
+                        <input name="keyword" type="text" placeholder="게시글 제목이나 내용을 검색하세요...">
+                        <button type="submit">검색</button>
+                    </div>
+                </form>
                 <select class="filter-select">
                     <option>전체</option>
                     <option>제목</option>
@@ -93,25 +95,6 @@
             <p>&copy; 2025 ComeOn. 모든 권리 보유.</p>
         </div>
     </footer>
-
-    <script>
-
-        // 검색 기능
-        document.querySelector('.search-box button').addEventListener('click', function() {
-            const searchTerm = document.querySelector('.search-box input').value;
-            if (searchTerm) {
-                alert('검색어: ' + searchTerm);
-            }
-        });
-
-        document.querySelector('.search-box input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const searchTerm = this.value;
-                if (searchTerm) {
-                    alert('검색어: ' + searchTerm);
-                }
-            }
-        });
 
         // 페이지네이션
         document.querySelectorAll('.page-btn').forEach(btn => {

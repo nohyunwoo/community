@@ -44,13 +44,18 @@ public class PostController {
     private final LikeService likeService;
 
     @GetMapping("/board")
-    public String board(@RequestParam(defaultValue = "0") int page,
+    public String board(@RequestParam(required = false) String keyword,
+                        @RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "10") int size,
                         Model model){
         Pageable pageable = PageRequest.of
                 (page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<Post> posts = postRepository.findAllWithUser(pageable);
-
+        Page<Post> posts;
+        if(keyword != null && !keyword.isBlank()){
+            posts = postRepository.searchPosts(keyword, pageable);
+        }else{
+            posts = postRepository.findAllWithUser(pageable);
+        }
         model.addAttribute("posts", posts);
         return "board";
     }
@@ -70,9 +75,11 @@ public class PostController {
     public String viewPost(@PathVariable Long id, Model model) {
         Post post = postService.findByIdAndIncreaseCount(id); // 조회 + 증가
         List<Comment> commentByPostId = commentService.getCommentByPostId(id);
+        long count = commentService.getCount(id);
         Long likeCount = likeService.getLikeCount(id);
         model.addAttribute("post", post);
         model.addAttribute("comments", commentByPostId);
+        model.addAttribute("count", count);
         model.addAttribute("likeCount", likeCount);
         return "postView";
     }
