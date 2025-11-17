@@ -17,17 +17,12 @@ public class Profile {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String image;
+    private String profileImage;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_displayName", referencedColumnName = "displayName")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     private String bio;
-
-    @OneToMany()
-    private List<Post> posts = new ArrayList<>();
-
-
 
 }

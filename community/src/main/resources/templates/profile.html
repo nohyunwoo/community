@@ -1,98 +1,185 @@
-<main>
-  <div class="container">
-    <section class="profile-section">
-      <div class="profile-card">
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PetLovers - 사용자 프로필</title>
+  <link rel="stylesheet" href="/profile.css">
+</head>
+<body>
+  <div th:replace="nav :: navbar"></div>
+
+  <main>
+    <div class="container">
+      <!-- 프로필 카드 -->
+      <div class="profile-card" id="profileCard">
         <div class="profile-header">
-          <img src="https://via.placeholder.com/150/d3d3d3/808080?text=Profile" alt="User Profile Image" class="profile-image">
+          <div class="profile-image-container">
+            <div class="profile-image" id="profileImage">
+              🐾
+            </div>
+            <button class="camera-btn" onclick="document.getElementById('imageInput').click()">📷</button>
+            <input type="file" id="imageInput" class="hidden" accept="image/*" onchange="handleImageUpload(event)">
+          </div>
+
           <div class="profile-info">
-            <h2 class="user-name">김냥냥</h2>
-            <p class="user-id">@catlover_kim</p>
-            <p class="user-bio">사랑스러운 고양이들과 함께하는 일상 🐾</p>
-          </div>
-        </div>
-        <div class="profile-stats">
-          <div class="stat-item">
-            <span class="stat-number">1,234</span>
-            <span class="stat-label">게시글</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number">56</span>
-            <span class="stat-label">팔로워</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number">99</span>
-            <span class="stat-label">팔로잉</span>
-          </div>
-        </div>
-        <div class="profile-actions">
-          <button class="btn btn-secondary edit-profile-btn">프로필 수정</button>
-          <button class="btn btn-primary message-btn">메시지 보내기</button>
-        </div>
-      </div>
-    </section>
+            <div class="profile-title">
+              <h1 class="username">PetLover123</h1>
+              <button class="follow-btn">팔로우</button>
+              <button class="save-btn" onclick="saveProfile()">저장하기</button>
+            </div>
 
-    <section class="pet-gallery-section">
-      <div class="section-title">
-        <h3>💖 나의 반려동물 자랑 갤러리</h3>
-      </div>
-      <div class="pet-gallery">
-        <div class="pet-item">
-          <img src="https://via.placeholder.com/300/e0e0e0/555555?text=냥이1" alt="Pet Image" class="pet-image">
-          <div class="pet-overlay">
-            <p class="pet-name">미미</p>
-            <p class="pet-breed">코리안 숏헤어</p>
-          </div>
-        </div>
-        <div class="pet-item">
-          <img src="https://via.placeholder.com/300/e0e0e0/555555?text=강아지2" alt="Pet Image" class="pet-image">
-          <div class="pet-overlay">
-            <p class="pet-name">똘똘이</p>
-            <p class="pet-breed">골든 리트리버</p>
-          </div>
-        </div>
-        <div class="pet-item">
-          <img src="https://via.placeholder.com/300/e0e0e0/555555?text=냥이3" alt="Pet Image" class="pet-image">
-          <div class="pet-overlay">
-            <p class="pet-name">솜이</p>
-            <p class="pet-breed">페르시안</p>
-          </div>
-        </div>
-        <div class="pet-item add-pet-item">
-          <div class="add-pet-icon">+</div>
-          <p>새 반려동물 추가</p>
-        </div>
-      </div>
-    </section>
+            <div class="stats">
+              <div class="stat-item">
+                <div class="stat-number">89</div>
+                <div class="stat-label">게시물</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number">1,234</div>
+                <div class="stat-label">팔로워</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number">567</div>
+                <div class="stat-label">팔로잉</div>
+              </div>
+            </div>
 
-    <section class="user-posts-section">
-      <div class="section-title">
-        <h3>✍️ 김냥냥님의 게시글</h3>
-      </div>
-      <div class="post-list">
-        <div class="post-item">
-          <div class="post-title"><a href="#">우리 똘똘이 털 빗는 방법! 꿀팁 공유해요!</a></div>
-          <div class="post-author">김냥냥</div>
-          <div class="post-date">2일 전</div>
-          <div class="post-views">
-            <span>👀</span>
-            <span>245</span>
-          </div>
-        </div>
-        <div class="post-item">
-          <div class="post-title"><a href="#">새로 산 고양이 장난감 후기 (feat. 미미)</a></div>
-          <div class="post-author">김냥냥</div>
-          <div class="post-date">1주 전</div>
-          <div class="post-views">
-            <span>👀</span>
-            <span>480</span>
+            <div class="bio" id="bioText">
+              우리 강아지 몽이와 고양이 나비를 사랑하는 집사입니다! 🐕🐱 매일매일 행복한 순간들을 공유하고 있어요.
+            </div>
+            <textarea class="bio-textarea" id="bioTextarea" rows="4" placeholder="자기소개를 입력해주세요...">우리 강아지 몽이와 고양이 나비를 사랑하는 집사입니다! 🐕🐱 매일매일 행복한 순간들을 공유하고 있어요.</textarea>
+
+            <div class="profile-meta">
+              <div class="meta-item">
+                <span>📍</span>
+                <span>서울, 대한민국</span>
+              </div>
+              <div class="meta-item">
+                <span>📅</span>
+                <span>2024년 3월에 가입</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="pagination">
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
+
+      <!-- 갤러리 카드 -->
+      <div class="gallery-card">
+        <h2 class="gallery-title">❤️ 우리 아이들 갤러리</h2>
+
+        <div class="gallery-grid">
+          <div class="photo-item">
+            <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=300&h=300&fit=crop" alt="Pet photo">
+            <div class="photo-overlay">
+              <div class="photo-likes">❤️ 24</div>
+            </div>
+          </div>
+
+          <div class="photo-item">
+            <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=300&h=300&fit=crop" alt="Pet photo">
+            <div class="photo-overlay">
+              <div class="photo-likes">❤️ 18</div>
+            </div>
+          </div>
+
+          <div class="photo-item">
+            <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=300&h=300&fit=crop" alt="Pet photo">
+            <div class="photo-overlay">
+              <div class="photo-likes">❤️ 32</div>
+            </div>
+          </div>
+
+          <div class="photo-item">
+            <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=300&h=300&fit=crop" alt="Pet photo">
+            <div class="photo-overlay">
+              <div class="photo-likes">❤️ 45</div>
+            </div>
+          </div>
+
+          <div class="photo-item">
+            <img src="https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=300&h=300&fit=crop" alt="Pet photo">
+            <div class="photo-overlay">
+              <div class="photo-likes">❤️ 28</div>
+            </div>
+          </div>
+
+          <div class="photo-item">
+            <img src="https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?w=300&h=300&fit=crop" alt="Pet photo">
+            <div class="photo-overlay">
+              <div class="photo-likes">❤️ 19</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="load-more">
+          <button class="load-more-btn">더 많은 사진 보기 ➤</button>
+        </div>
       </div>
-    </section>
-  </div>
-</main>
+    </div>
+  </main> <!-- 🔥 여기 닫힘 추가됨 -->
+
+  <script>
+    let isEditing = false;
+
+    function toggleEdit() {
+      isEditing = !isEditing;
+      const profileCard = document.getElementById('profileCard');
+
+      if (isEditing) {
+        profileCard.classList.add('editing');
+      } else {
+        profileCard.classList.remove('editing');
+        document.getElementById('bioTextarea').value = document.getElementById('bioText').textContent;
+      }
+    }
+
+    function saveProfile() {
+      const bioText = document.getElementById('bioTextarea').value;
+      document.getElementById('bioText').textContent = bioText;
+
+      console.log('Profile saved:', {
+        bio: bioText,
+        profileImage: document.getElementById('profileImage').innerHTML
+      });
+
+      toggleEdit();
+
+      alert('프로필이 성공적으로 업데이트되었습니다! 🎉');
+    }
+
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('profileImage').innerHTML =
+            `<img src="${e.target.result}" alt="프로필 이미지">`;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function shareProfile() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'PetLovers - PetLover123님의 프로필',
+          text: '우리 강아지 몽이와 고양이 나비를 사랑하는 집사의 프로필을 확인해보세요!',
+          url: window.location.href
+        });
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert('프로필 링크가 클립보드에 복사되었습니다!');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const photoItems = document.querySelectorAll('.photo-item');
+      photoItems.forEach(item => {
+        item.addEventListener('click', function() {
+          console.log('Photo clicked');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
