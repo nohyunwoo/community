@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://community_mysql:3306/community?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: zltkak1122
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+  logging:
+    level:
+      org.hibernate.SQL: DEBUG
+      org.hibernate.type.descriptor.sql.BasicBinder: TRACE
