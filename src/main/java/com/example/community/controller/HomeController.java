@@ -3,6 +3,7 @@ package com.example.community.controller;
 import com.example.community.entity.Post;
 import com.example.community.repository.PostRepository;
 import com.example.community.security.CustomUserDetails;
+import com.example.community.service.HomeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
@@ -16,18 +17,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HomeController {
 
-    private final PostRepository postRepository;
+    private final HomeService homeService;
 
     @GetMapping("/home")
     public String home(Model model, Authentication authentication){
 
-        List<Post> postList = postRepository.findTop5Posts(PageRequest.of(0, 5));
+        List<Post> postList = homeService.getTop5Posts();
         model.addAttribute("postList", postList);
 
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
             CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
             model.addAttribute("displayName", user.getDisplayName());
-
         }
         return "home";
     }
