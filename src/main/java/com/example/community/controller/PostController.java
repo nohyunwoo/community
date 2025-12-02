@@ -50,15 +50,11 @@ public class PostController {
                         Model model){
         Pageable pageable = PageRequest.of
                 (page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<Post> posts;
-        if(keyword != null && !keyword.isBlank()){
-            posts = postRepository.searchPosts(keyword, pageable);
-        }else{
-            posts = postRepository.findAllWithUser(pageable);
-        }
+        Page<Post> posts = postService.getPosts(keyword, pageable);
         model.addAttribute("posts", posts);
         return "board";
     }
+
     @GetMapping("/post")
     public String post(){
         return "post";
@@ -77,6 +73,7 @@ public class PostController {
         List<Comment> commentByPostId = commentService.getCommentByPostId(id);
         long count = commentService.getCount(id);
         Long likeCount = likeService.getLikeCount(id);
+
         model.addAttribute("post", post);
         model.addAttribute("comments", commentByPostId);
         model.addAttribute("count", count);

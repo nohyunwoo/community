@@ -7,6 +7,8 @@ import com.example.community.exception.PostNotFoundException;
 import com.example.community.repository.PostRepository;
 import com.example.community.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,5 +59,13 @@ public class PostService {
         Post post = optionPost.get();
         post.increaseCount();
         return post;
+    }
+
+    public Page<Post> getPosts(String keyword, Pageable pageable){
+        Page<Post> posts;
+        if(keyword != null && !keyword.isBlank()){
+            return postRepository.searchPosts(keyword, pageable);
+        }
+        return postRepository.findAllWithUser(pageable);
     }
 }
