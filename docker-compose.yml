@@ -36,11 +36,7 @@ services:
       - "8080:8080"
     networks:
       - community-net
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      interval: 5s
-      timeout: 3s
-      retries: 30
+
   redis:
     image: redis:latest
     container_name: redis
@@ -48,6 +44,11 @@ services:
       - "6379:6379"
     networks:
       - community-net
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 30
 
 networks:
   community-net:
