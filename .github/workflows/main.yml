@@ -37,6 +37,7 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           cd ~/community
+          git pull
           docker compose pull
           docker compose down
           docker compose up -d
